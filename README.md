@@ -1,94 +1,102 @@
 
 # GPU-MPC
 
-Implementation of protocols from the papers [Orca](https://eprint.iacr.org/2023/206) and [SIGMA](https://eprint.iacr.org/2023/1269).
+## 声明
 
-**Warning**: This is an academic proof-of-concept prototype and has not received careful code review. This implementation is NOT ready for production use.
+本项目非原创。最初版本来自 [EzPC 项目](https://github.com/mpc-msri/EzPC)中的 GPU-MPC 文件夹。
 
-## Build
+---
 
-This project requires NVIDIA GPUs, and assumes that GPU drivers and the [NVIDIA CUDA Toolkit](https://docs.nvidia.com/cuda/) are already installed. The following has been tested on Ubuntu 20.04 with CUDA 11.7, CMake 3.27.2 and g++-9. 
+这是论文 [Orca](https://eprint.iacr.org/2023/206) 和 [SIGMA](https://eprint.iacr.org/2023/1269) 所提出协议的实现。
 
-Please note that Sytorch requires CMake version >= 3.17 and the build will fail if this depency is not met. 
+**警告**：这是一个学术概念验证原型，尚未接受严格的代码审查。此实现**不适合**在生产环境中使用。
 
-The code uses CUTLASS version 2.11 by default, so if you change the CUDA version, please make sure that the CUTLASS version being built is compatible with the new CUDA version.
+## 构建
 
-The last line of `setup.sh` tries to install `matplotlib`, which is needed for generating Figures 5a and 5b. In our experience, the installation fails if the versions of Python and `pip` do not match. In case the installation fails, please install `matplotlib` manually before running `run_experiment.py`.
+此项目需要 NVIDIA GPU，并假设已安装 GPU 驱动和 [NVIDIA CUDA 工具包](https://docs.nvidia.com/cuda/)。以下构建已在 Ubuntu 20.04（CUDA 11.7、CMake 3.27.2 和 g++-9）上测试。
 
-1. Export environment variables
+请注意，Sytorch 需要 CMake 版本 >= 3.17，如果不满足此依赖项，构建将失败。
+
+代码默认使用 CUTLASS 版本 2.11，因此如果更改 CUDA 版本，请确保正在构建的 CUTLASS 版本与新 CUDA 版本兼容。
+
+`setup.sh` 的最后一行尝试安装 `matplotlib`，这是生成图 5a 和 5b 所需的。根据我们的经验，如果 Python 和 `pip` 的版本不匹配，安装会失败。如果安装失败，请在运行 `run_experiment.py` 之前手动安装 `matplotlib`。
+
+1. 导出环境变量
 
 ```
 export CUDA_VERSION=11.7
 export GPU_ARCH=86
 ```
 
-2. Set up the environment. 
+2. 设置环境
 
 ```
 sh setup.sh <CUTLASS branch>
 ```
 
-To change the version of CUTLASS being built, optionally include the CUTLASS branch that should be built as
+要更改要构建的 CUTLASS 版本，可以选择性地包括应该构建的 CUTLASS 分支
 
 ```
 sh setup.sh <CUTLASS branch>
 ```
-For example, to build the main branch, run
+例如，要构建主分支，请运行
 
 ```
 sh setup.sh main
 ```
 
-
-3. Make Orca
+3. 构建 Orca
 
 ```
 make orca
 ```
-4. Make sigma (this does not require making Orca)
+
+4. 构建 SIGMA（这不需要构建 Orca）
 
 ```
 make sigma
 ```
 
-## Run Orca
+## 运行 Orca
 
-Please see the [Orca README](experiments/orca/README.md).
+请参阅 [Orca README](experiments/orca/README.md)。
 
-## Run SIGMA
+## 运行 SIGMA
 
-Please see the [SIGMA README](experiments/sigma/README.md)
+请参阅 [SIGMA README](experiments/sigma/README.md)
 
-## Docker Build
+## Docker 构建
 
-You can also build the docker image using the provided Dockerfile_Gen for building the Environment. 
+您也可以使用提供的 Dockerfile_Gen 构建 Docker 镜像来构建环境。
 
-### Install Nvidia Container Toolkit
-- Configure the repository:
+### 安装 NVIDIA 容器工具包
+- 配置仓库：
 ```
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey |sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
 && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
 && sudo apt-get update
 ```
 
-- Install the NVIDIA Container Toolkit packages:
+- 安装 NVIDIA 容器工具包：
 ```
 sudo apt-get install -y nvidia-container-toolkit
 sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
 ```
-### Build the Docker Image / pull the image from Docker Hub
+
+### 构建 Docker 镜像或从 Docker Hub 拉取镜像
 ```
-# Local Build
+# 本地构建
 docker build -t gpu_mpc -f Dockerfile_Gen .
 
-# Pull from Docker Hub (Cuda 11.8)
+# 从 Docker Hub 拉取 (Cuda 11.8)
 docker pull trajore/gpu_mpc
 ```
-### Run the Docker Container
+
+### 运行 Docker 容器
 ```
 sudo docker run --gpus all --network host -v /home/$USER/path_to_GPU-MPC/:/home -it container_name /bin/bash
-
 ```
-Then Run setup.sh to configure according to GPU_arch and make Orca/SIGMA as mentioned above.
+
+然后运行 setup.sh 以根据 GPU_arch 进行配置，并按上述说明构建 Orca/SIGMA。
 
