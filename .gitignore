@@ -1,0 +1,19 @@
+# Build outputs
+build/
+bin/
+
+# Local environments
+mpc_venv
+
+# IDE metadata
+.idea/
+.vscode/
+
+# Common generated artifacts
+*.onnx
+*.npy
+*.out
+*Zone.Identifier
+
+# Generated binary from sigma experiment
+experiments/sigma/sigma_offline_online

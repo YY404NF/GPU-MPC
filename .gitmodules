@@ -1,0 +1,15 @@
+[submodule "ext/cutlass"]
+	path = ext/cutlass
+	url = https://github.com/NVIDIA/cutlass.git
+
+[submodule "experiments/orca/weights"]
+	path = experiments/orca/weights
+	url = https://github.com/neha-jawalkar/weights.git
+
+[submodule "experiments/orca/datasets/mnist"]
+	path = experiments/orca/datasets/mnist
+	url = https://github.com/neha-jawalkar/mnist.git
+
+[submodule "ext/sytorch/ext/sci/extern/SEAL"]
+	path = ext/sytorch/ext/sci/extern/SEAL
+	url = https://github.com/microsoft/SEAL.git
